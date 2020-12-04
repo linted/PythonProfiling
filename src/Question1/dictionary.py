@@ -3,34 +3,38 @@
 from functools import partial
 from typing import List, Dict, Callable, Iterator, Hashable, Union
 
-def dictionary_access() -> str:
-    foo_str = "def foo(dictionary, element):\n  return dictionary[element]"
+def dictionary_access(dictionary:str) -> str:
+    foo_str = "def foo(element):\n  dictionary={}\n  return dictionary[element]()".format(dictionary)
     return foo_str
 
-def dictionary_get() -> str:
-    foo_str = "def foo(dictionary, element):\n  return dictionary.get(element, None)"
+def dictionary_get(dictionary:str) -> str:
+    foo_str = "def foo(element):\n  dictionary={}\n  return dictionary.get(element)()".format(dictionary)
     return foo_str
 
-def gen_str_dictionary(keys: List[str]) -> Dict[str, Callable[[], str]] :
+def gen_str_dictionary(keys: List[str]) -> str:
     ''' This function takes a list of keys and returns a dictionary
         of keys and functions which return that key '''
-    def foo(string:str) -> str:
-        return string
-    return {key:partial(foo,key) for key in keys}
 
-def gen_int_dictionary(start:int=0, stop:int=1024, step:int=1) -> Dict[str, Callable[[], int]] :
+    output = '{'
+    output += ','.join("'{key}':(lambda : '{key}')".format(key=key) for key in keys)
+    output += '}'
+    return output
+
+def gen_int_dictionary(start:int=0, stop:int=1024, step:int=1) -> str :
     ''' This function takes a start and stop range with steps and 
         returns a dictionary of strings for each number in that range, 
         and a function that returns 2 times the number '''
-    def foo(number:int) -> int:
-        return number * 2
-    return {str(x):partial(foo, x) for x in range(start,stop, step)}
+    output = '{'
+    output += ','.join("{x}:(lambda : {x}*2)".format(x=x) for x in range(start,stop,step))
+    output += '}'
+    return output
 
-def gen_generator_dictionary(generator:Iterator[Hashable]) -> Dict[Hashable, Callable[[], str]] :
+def gen_generator_dictionary(generator:Iterator[Hashable]) -> str :
     ''' Takes a iterator of hashable items, and returns a dictionary 
         containing each element and a function that returns the string
         version of that element ''' 
-    def foo(string:str) -> str:
-        return string
-    return {item:partial(foo,str(item)) for item in generator}
+    output = '{'
+    output += ','.join("{item}:(lambda : {item})".format(item) for item in generator)
+    output += '}'
+    return output
 

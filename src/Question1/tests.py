@@ -46,13 +46,13 @@ def generate_string_test_cases() -> Iterable[ Tuple[str, str, Iterable[Any]] ]:
             [
                 (
                     "gen_str_dictionary_access_" + name,
-                    dictionary.dictionary_access(),
-                    dictionary.gen_str_dictionary(args)
+                    dictionary.dictionary_access(dictionary.gen_str_dictionary(args)),
+                    args
                 ),
                 (
                     "gen_str_dictionary_get_" + name,
-                    dictionary.dictionary_get(),
-                    dictionary.gen_str_dictionary(args)
+                    dictionary.dictionary_get(dictionary.gen_str_dictionary(args)),
+                    args
                 ),
                 (
                     "gen_str_if_" + name,

@@ -36,7 +36,9 @@ def run_test(func:str, inputs:Iterable[Any], outdir:str, testName:str) -> None:
 
     profile =  "def profile(test, inputs):\n"
     profile += "  for item in inputs:\n"
-    profile += "    test(item)\n"
+    profile += "    test(item)\n\n"
+
+    run = "\n\nprofile(foo, args)"
 
     inputs_copy = list(inputs)
     random.shuffle(inputs_copy)
@@ -45,17 +47,18 @@ def run_test(func:str, inputs:Iterable[Any], outdir:str, testName:str) -> None:
     outputFile = os.path.join(outdir,testName+".txt")
     globalVars = {}
     localVars  = {
-
-        'args': inputs_copy
+        'args': inputs_copy,
+        'dictionary':{}
         }
     print("{:#^60}".format(testName +" Start"))
     try:
-        cProfile.runctx(profile + func, globalVars, localVars, outputFile)
-    except RecursionError:
-        print("Error while doing test: {}".format(testName))
+        cProfile.runctx(profile + func + run, globalVars, localVars, outputFile)
+    except Exception as e:
+        print("Error while doing test: {} -> {}".format(testName, e))
         with open("error.out",'w') as fout:
             fout.write(profile + func)
-    # pstats.Stats(outputFile).print_stats()
+            exit()
+    pstats.Stats(outputFile).print_stats()
     print("{:#^60}".format(testName +" Stop"))
 
 
