@@ -20,7 +20,7 @@ def gen_str_if(keys: List[str]) -> Callable[[str], str]:
     SPACING = "  "
     for item in keys:
         # add each element to the conditional
-        foo_str += f"{SPACING}if x == {item}:\n{SPACING}{SPACING}return {item}\n"
+        foo_str += f"{SPACING}if x == '{item}':\n{SPACING}{SPACING}return '{item}'\n"
 
     foo_compiled = compile(foo_str,'','exec')
     eval(foo_compiled)
@@ -40,7 +40,7 @@ def gen_str_ifelse(keys: List[str]) -> Callable[[str], str]:
     COND='if'
     for item in keys:
         # add each element to the conditional
-        foo_str += f"{SPACING}{COND} x == {item}:\n{SPACING}{SPACING}return {item}\n"
+        foo_str += f"{SPACING}{COND} x == '{item}':\n{SPACING}{SPACING}return '{item}'\n"
         COND='elif'
 
     foo_compiled = compile(foo_str,'','exec')

@@ -3,6 +3,7 @@ import os
 import argparse
 import cProfile
 import random
+from shutil import rmtree
 
 from typing import Callable, Iterable, Any, Tuple
 
@@ -19,7 +20,7 @@ def get_args() -> argparse.Namespace:
 def clean_work_area(outdir:str) -> None:
     # remove the output directory if it exists
     if os.path.isdir(outdir):
-        os.rmdir(outdir)
+        rmtree(outdir)
 
     # make that output dir
     os.mkdir(outdir)
@@ -32,9 +33,9 @@ def run_test(func:Callable[[Any], Any], inputs:Iterable[Any], outdir:str, testNa
 
     '''
 
-    def profile(func:Callable[[Any], Any], inputs:Iterable[Any]):
+    def profile(test:Callable[[Any], Any], inputs:Iterable[Any]):
         for item in inputs:
-            func(item)
+            test(item)
 
     inputs_copy = list(inputs)
     random.shuffle(inputs_copy)
@@ -44,10 +45,11 @@ def run_test(func:Callable[[Any], Any], inputs:Iterable[Any], outdir:str, testNa
     globalVars = {}
     localVars  = {
         'profile':profile,
+        'function': func,
         'args': inputs_copy
         }
     print("{:#^60}".format(testName +" Start"))
-    cProfile.runctx("profile(args)", globalVars, localVars, outputFile)
+    cProfile.runctx("profile(function, args)", globalVars, localVars, outputFile)
     print("{:#^60}".format(testName +" Stop"))
 
 

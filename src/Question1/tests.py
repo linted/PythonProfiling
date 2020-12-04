@@ -6,6 +6,8 @@ from typing import Iterable, Tuple, Callable, Any
 
 from . import ifelse, dictionary
 
+INVALID_CHARS = "'\\\"\n\r\0"
+
 # Test format
 # [
 #     (
@@ -14,15 +16,14 @@ from . import ifelse, dictionary
 #         args
 #     )
 # ]
-
 SMALL_SINGLE_STRING_LIST = ['a','b', 'c']
 SMALL_DOUBLE_STRING_LIST = ['aa', 'ab', 'ac']
 SMALL_TRIPLE_STRING_LIST = ['aaa', 'aab', 'aac']
-MEDIUM_SINGLE_STRING_LIST = list(string.printable)
+MEDIUM_SINGLE_STRING_LIST = list(x for x in string.printable if x not in INVALID_CHARS)
 MEDIUM_DOUBLE_STRING_LIST = list(''.join(x) for x in itertools.combinations(string.digits,2))
 MEDIUM_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.combinations(string.digits,3))
-LARGE_SINGLE_STRING_LIST = list(chr(x) for x in range(700))
-LARGE_DOUBLE_STRING_LIST = list(''.join(x) for x in itertools.combinations((chr(x) for x in range(350)), 2))
+LARGE_SINGLE_STRING_LIST = list(chr(x) for x in range(700) if chr(x) not in INVALID_CHARS)
+LARGE_DOUBLE_STRING_LIST = list(''.join(x) for x in itertools.combinations((chr(x) for x in range(350) if chr(x) not in INVALID_CHARS), 2))
 LARGE_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.permutations(string.digits, 3))
 HUGE_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.permutations(string.ascii_lowercase, 3))
 
