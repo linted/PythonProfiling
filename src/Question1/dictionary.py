@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 
 from functools import partial
-from typing import List, Dict, Callable, Iterator, Hashable
+from typing import List, Dict, Callable, Iterator, Hashable, Union
+
+def dictionary_access() -> str:
+    foo_str = "def foo(dictionary, element):\n  return dictionary[element]"
+    return foo_str
+
+def dictionary_get() -> str:
+    foo_str = "def foo(dictionary, element):\n  return dictionary.get(element, None)"
+    return foo_str
 
 def gen_str_dictionary(keys: List[str]) -> Dict[str, Callable[[], str]] :
     ''' This function takes a list of keys and returns a dictionary

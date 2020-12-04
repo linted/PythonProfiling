@@ -2,6 +2,7 @@
 import os
 import argparse
 import cProfile
+import pstats
 import random
 from shutil import rmtree
 
@@ -25,7 +26,7 @@ def clean_work_area(outdir:str) -> None:
     # make that output dir
     os.mkdir(outdir)
 
-def run_test(func:Callable[[Any], Any], inputs:Iterable[Any], outdir:str, testName:str) -> None:
+def run_test(func:str, inputs:Iterable[Any], outdir:str, testName:str) -> None:
     '''
         Profiles a function using cProfile.
         func: The function to profile
@@ -33,9 +34,9 @@ def run_test(func:Callable[[Any], Any], inputs:Iterable[Any], outdir:str, testNa
 
     '''
 
-    def profile(test:Callable[[Any], Any], inputs:Iterable[Any]):
-        for item in inputs:
-            test(item)
+    profile =  "def profile(test, inputs):\n"
+    profile += "  for item in inputs:\n"
+    profile += "    test(item)\n"
 
     inputs_copy = list(inputs)
     random.shuffle(inputs_copy)
@@ -44,16 +45,21 @@ def run_test(func:Callable[[Any], Any], inputs:Iterable[Any], outdir:str, testNa
     outputFile = os.path.join(outdir,testName+".txt")
     globalVars = {}
     localVars  = {
-        'profile':profile,
-        'function': func,
+
         'args': inputs_copy
         }
     print("{:#^60}".format(testName +" Start"))
-    cProfile.runctx("profile(function, args)", globalVars, localVars, outputFile)
+    try:
+        cProfile.runctx(profile + func, globalVars, localVars, outputFile)
+    except RecursionError:
+        print("Error while doing test: {}".format(testName))
+        with open("error.out",'w') as fout:
+            fout.write(profile + func)
+    # pstats.Stats(outputFile).print_stats()
     print("{:#^60}".format(testName +" Stop"))
 
 
-def get_tests() -> Iterable[ Tuple[str, Callable[[Any],Any], Iterable[Any] ] ]:
+def get_tests() -> Iterable[ Tuple[str, str, Iterable[ Any ] ] ]:
     '''
         Returns an iterable of tests to run:
         [

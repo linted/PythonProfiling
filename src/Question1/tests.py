@@ -2,7 +2,7 @@
 import string
 import itertools
 
-from typing import Iterable, Tuple, Callable, Any
+from typing import Iterable, Tuple, Callable, Any, Union
 
 from . import ifelse, dictionary
 
@@ -12,7 +12,7 @@ INVALID_CHARS = "'\\\"\n\r\0"
 # [
 #     (
 #         Name,
-#         func,
+#         func_str,
 #         args
 #     )
 # ]
@@ -23,11 +23,11 @@ MEDIUM_SINGLE_STRING_LIST = list(x for x in string.printable if x not in INVALID
 MEDIUM_DOUBLE_STRING_LIST = list(''.join(x) for x in itertools.combinations(string.digits,2))
 MEDIUM_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.combinations(string.digits,3))
 LARGE_SINGLE_STRING_LIST = list(chr(x) for x in range(700) if chr(x) not in INVALID_CHARS)
-LARGE_DOUBLE_STRING_LIST = list(''.join(x) for x in itertools.combinations((chr(x) for x in range(350) if chr(x) not in INVALID_CHARS), 2))
-LARGE_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.permutations(string.digits, 3))
-HUGE_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.permutations(string.ascii_lowercase, 3))
+LARGE_DOUBLE_STRING_LIST = list(''.join(x) for x in itertools.combinations((chr(x) for x in range(60) if chr(x) not in INVALID_CHARS), 2))
+LARGE_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.permutations((chr(x) for x in range(25,39) if chr(x) not in INVALID_CHARS), 3))
+# HUGE_TRIPLE_STRING_LIST = list(''.join(x) for x in itertools.permutations(string.ascii_lowercase, 3))
 
-def generate_string_test_cases() -> Iterable[ Tuple[str, Callable[[Any],Any], Iterable[Any] ] ]:
+def generate_string_test_cases() -> Iterable[ Tuple[str, str, Iterable[Any]] ]:
     str_argument_types = (
         ("small_single", SMALL_SINGLE_STRING_LIST),
         ("small_double", SMALL_DOUBLE_STRING_LIST),
@@ -38,25 +38,30 @@ def generate_string_test_cases() -> Iterable[ Tuple[str, Callable[[Any],Any], It
         ("large_single", LARGE_SINGLE_STRING_LIST),
         ("large_double", LARGE_DOUBLE_STRING_LIST),
         ("large_triple", LARGE_TRIPLE_STRING_LIST),
-        ("huge_triple", HUGE_TRIPLE_STRING_LIST)
+        # ("huge_triple", HUGE_TRIPLE_STRING_LIST)
     )
     test_cases = []
     for name, args in str_argument_types:
         test_cases.extend(
             [
                 (
-                    "gen_str_dictionary_" + name,
-                    dictionary.gen_str_dictionary,
-                    args
+                    "gen_str_dictionary_access_" + name,
+                    dictionary.dictionary_access(),
+                    dictionary.gen_str_dictionary(args)
+                ),
+                (
+                    "gen_str_dictionary_get_" + name,
+                    dictionary.dictionary_get(),
+                    dictionary.gen_str_dictionary(args)
                 ),
                 (
                     "gen_str_if_" + name,
-                    ifelse.gen_str_if,
+                    ifelse.gen_str_if(args),
                     args
                 ),
                 (
                     "gen_str_ifelse_" + name,
-                    ifelse.gen_str_ifelse,
+                    ifelse.gen_str_ifelse(args),
                     args
                 )
             ]
@@ -64,6 +69,6 @@ def generate_string_test_cases() -> Iterable[ Tuple[str, Callable[[Any],Any], It
 
     return test_cases
 
-tests:Iterable[ Tuple[str, Callable[[Any],Any], Iterable[Any] ] ]  = []
+tests:Iterable[ Tuple[str, str, Iterable[Any] ] ]  = []
 tests.extend(generate_string_test_cases())
 

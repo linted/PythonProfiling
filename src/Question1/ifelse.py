@@ -8,12 +8,11 @@ from typing import Callable, List, Any, Iterator
 # *******************
 
 
-def gen_str_if(keys: List[str]) -> Callable[[str], str]:
+def gen_str_if(keys: List[str]) -> str:
     ''' This function takes a list of keys and returns
         a function with a series of if statements for each key'''
     # Don't judge me, I did what I had to to make this work
 
-    foo = None # this is here to remove linting warnings
 
     # start the definition of the function and setup some smartness
     foo_str = "def foo(x:str) -> str:\n"
@@ -22,17 +21,13 @@ def gen_str_if(keys: List[str]) -> Callable[[str], str]:
         # add each element to the conditional
         foo_str += f"{SPACING}if x == '{item}':\n{SPACING}{SPACING}return '{item}'\n"
 
-    foo_compiled = compile(foo_str,'','exec')
-    eval(foo_compiled)
-    return foo
+    return foo_str
 
 
-def gen_str_ifelse(keys: List[str]) -> Callable[[str], str]:
+def gen_str_ifelse(keys: List[str]) -> str:
     ''' This function takes a list of keys and returns
         a function with if/else statements for each key'''
     # Don't judge me, I did what I had to to make this work
-
-    foo = None # this is here to remove linting warnings
 
     # start the definition of the function and setup some smartness
     foo_str = "def foo(x:str) -> str:\n"
@@ -43,16 +38,12 @@ def gen_str_ifelse(keys: List[str]) -> Callable[[str], str]:
         foo_str += f"{SPACING}{COND} x == '{item}':\n{SPACING}{SPACING}return '{item}'\n"
         COND='elif'
 
-    foo_compiled = compile(foo_str,'','exec')
-    eval(foo_compiled)
-    return foo
+    return foo_str
 
-def gen_int_if(start:int=0, stop:int=1024, step:int=1) -> Callable[[int], int]:
+def gen_int_if(start:int=0, stop:int=1024, step:int=1) -> str:
     ''' This function takes a range and returns
         a function with a series of if statements for each element'''
     # Don't judge me, I did what I had to to make this work
-
-    foo = None # this is here to remove linting warnings
 
     # start the definition of the function and setup some smartness
     foo_str = "def foo(x:int) -> int:\n"
@@ -61,17 +52,13 @@ def gen_int_if(start:int=0, stop:int=1024, step:int=1) -> Callable[[int], int]:
         # add each element to the conditional
         foo_str += f"{SPACING}if x == {item}:\n{SPACING}{SPACING}return {item} * 2\n"
 
-    foo_compiled = compile(foo_str,'','exec')
-    eval(foo_compiled)
-    return foo
+    return foo_str
 
 
-def gen_int_ifelse(start:int=0, stop:int=1024, step:int=1) -> Callable[[int], int]:
+def gen_int_ifelse(start:int=0, stop:int=1024, step:int=1) -> str:
     ''' This function takes a range and returns
         a function with if/else statements for each element'''
     # Don't judge me, I did what I had to to make this work
-
-    foo = None # this is here to remove linting warnings
 
     # start the definition of the function and setup some smartness
     foo_str = "def foo(x:int) -> int:\n"
@@ -82,17 +69,13 @@ def gen_int_ifelse(start:int=0, stop:int=1024, step:int=1) -> Callable[[int], in
         foo_str += f"{SPACING}{COND} x == {item}:\n{SPACING}{SPACING}return {item} * 2\n"
         COND='elif'
 
-    foo_compiled = compile(foo_str,'','exec')
-    eval(foo_compiled)
-    return foo
+    return foo_str
 
 
-def gen_generator_if(generator: Iterator[Any]) -> Callable[[Any], str]:
+def gen_generator_if(generator: Iterator[Any]) -> str:
     ''' This function takes a list of keys and returns
         a function with a series of if statements for each key'''
     # Don't judge me, I did what I had to to make this work
-
-    foo = None # this is here to remove linting warnings
 
     # start the definition of the function and setup some smartness
     foo_str = "def foo(x:str) -> str:\n"
@@ -101,17 +84,13 @@ def gen_generator_if(generator: Iterator[Any]) -> Callable[[Any], str]:
         # add each element to the conditional
         foo_str += f"{SPACING}if x == {item}:\n{SPACING}{SPACING}return {item}\n"
 
-    foo_compiled = compile(foo_str,'','exec')
-    eval(foo_compiled)
-    return foo
+    return foo_str
 
 
-def gen_generator_ifelse(generator: Iterator[Any]) -> Callable[[Any], str]:
+def gen_generator_ifelse(generator: Iterator[Any]) -> str:
     ''' This function takes a list of keys and returns
         a function with if/else statements for each key'''
     # Don't judge me, I did what I had to to make this work
-
-    foo = None # this is here to remove linting warnings
 
     # start the definition of the function and setup some smartness
     foo_str = "def foo(x:str) -> str:\n"
@@ -122,6 +101,4 @@ def gen_generator_ifelse(generator: Iterator[Any]) -> Callable[[Any], str]:
         foo_str += f"{SPACING}{COND} x == {item}:\n{SPACING}{SPACING}return {item}\n"
         COND='elif'
 
-    foo_compiled = compile(foo_str,'','exec')
-    eval(foo_compiled)
-    return foo
+    return foo_str
