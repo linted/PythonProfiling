@@ -3,11 +3,19 @@
 from functools import partial
 from typing import List, Dict, Callable, Iterator, Hashable, Union
 
-def dictionary_access(dictionary:str) -> str:
+def dictionary_access_pre(dictionary:str) -> str:
+    foo_str = "dictionary={}\ndef foo(element):\n return dictionary[element]()".format(dictionary)
+    return foo_str
+
+def dictionary_get_pre(dictionary:str) -> str:
+    foo_str = "dictionary={}\ndef foo(element):\n  return dictionary.get(element)()".format(dictionary)
+    return foo_str
+
+def dictionary_access_during(dictionary:str) -> str:
     foo_str = "def foo(element):\n  dictionary={}\n  return dictionary[element]()".format(dictionary)
     return foo_str
 
-def dictionary_get(dictionary:str) -> str:
+def dictionary_get_during(dictionary:str) -> str:
     foo_str = "def foo(element):\n  dictionary={}\n  return dictionary.get(element)()".format(dictionary)
     return foo_str
 

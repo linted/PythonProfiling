@@ -29,16 +29,16 @@ def clean_work_area(outdir:str) -> None:
 def run_test(func:str, inputs:Iterable[Any], outdir:str, testName:str) -> None:
     '''
         Profiles a function using cProfile.
-        func: The function to profile
+        func: The str representation of a function to profile
         inputs: An iterable of valid (or invalid if that's what you're into) inputs that will be shuffled and passed to func
 
     '''
 
-    profile =  "def profile(test, inputs):\n"
+    profile =  "def profile(inputs):\n"
+    profile += "  " + func.replace("\n", "\n  ") + "\n"
     profile += "  for item in inputs:\n"
-    profile += "    test(item)\n\n"
-
-    run = "\n\nprofile(foo, args)"
+    profile += "    foo(item)\n\n"
+    profile += "profile(args)"
 
     inputs_copy = list(inputs)
     random.shuffle(inputs_copy)
@@ -48,15 +48,14 @@ def run_test(func:str, inputs:Iterable[Any], outdir:str, testName:str) -> None:
     globalVars = {}
     localVars  = {
         'args': inputs_copy,
-        'dictionary':{}
         }
     print("{:#^60}".format(testName +" Start"))
     try:
-        cProfile.runctx(profile + func + run, globalVars, localVars, outputFile)
+        cProfile.runctx(profile, globalVars, localVars, outputFile)
     except Exception as e:
         print("Error while doing test: {} -> {}".format(testName, e))
         with open("error.out",'w') as fout:
-            fout.write(profile + func)
+            fout.write(profile)
             exit()
     pstats.Stats(outputFile).print_stats()
     print("{:#^60}".format(testName +" Stop"))
